@@ -169,7 +169,62 @@ The built-in `DEFAULT_SECTIONS` covers common e-commerce and web app areas:
 
 ---
 
-## HTML summary
+## Live per-test status lines
+
+In addition to the end-of-run summary, you can print a coloured one-liner **as each test completes** using `logTestStatus`. This gives you real-time visibility during long runs.
+
+```
+[PROD-UK:Desktop:chromium] - Test(42): adds item to cart: PASSED ✅  0.38m
+[STAGING-US:Mobile:webkit] - Test(87): checkout flow: FAILED ❌  1.12m [attempt 2/3]
+[DEV-DE:Desktop:chromium]  - Test(15): loyalty enrolment: SKIPPED ⚠️  0.00m
+```
+
+### Setup
+
+Add to your fixture or `afterEach` hook:
+
+```ts
+import { logTestStatus, getEnvLabel } from 'playwright-final-summary-reporter';
+
+test.afterEach(async ({ browserName }, testInfo) => {
+  const baseURL = testInfo.project.use.baseURL ?? '';
+  logTestStatus(getEnvLabel(baseURL), testInfo, browserName);
+});
+```
+
+### `getEnvLabel(baseURL)`
+
+Derives a short label from the base URL automatically:
+
+| URL | Label |
+|-----|-------|
+| `https://myapp.com/en-gb/` | `PROD-GB` |
+| `https://staging.myapp.com/en-us/` | `STAGING-US` |
+| `https://dev.myapp.com/de-de/` | `DEV-DE` |
+| `http://localhost:3000/` | `LOCAL` |
+| Vercel preview URL | `PREVIEW-XX` |
+
+Pass any custom string instead if your URL structure is different:
+
+```ts
+logTestStatus('MY-ENV', testInfo, browserName);
+```
+
+### Colour scheme
+
+| Status | Colour |
+|--------|--------|
+| PASSED ✅ | Bold bright green |
+| FAILED ❌ | Bold bright red |
+| SKIPPED ⚠️ | Bold bright yellow |
+| TIMED OUT ⏰ | Bold bright magenta |
+| INTERRUPTED ⛔ | Bold bright blue |
+
+All colours use 16-colour ANSI codes — reliable in GitHub Actions, GitLab CI, and local terminals alike.
+
+---
+
+
 
 When `PLAYWRIGHT_SUMMARY_PUBLISH=1` is set (or in any CI environment), the reporter writes `playwright-summary.html` alongside your standard Playwright HTML report. It shows passed/failed/skipped tests grouped by Platform → Project → Section with clickable breadcrumbs.
 
