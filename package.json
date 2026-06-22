@@ -1,0 +1,39 @@
+{
+  "name": "playwright-final-summary-reporter",
+  "version": "1.0.0",
+  "description": "A Playwright reporter that prints a rich grouped terminal summary, generates an HTML report, and optionally posts results to Slack.",
+  "author": "Sherif Opeloyeru <sherifopel>",
+  "license": "MIT",
+  "keywords": [
+    "playwright",
+    "reporter",
+    "test",
+    "summary",
+    "slack",
+    "ci"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sherifopel/playwright-final-summary-reporter.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.40.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
